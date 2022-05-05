@@ -10,10 +10,10 @@ float time_studied =0;	//counts the total number of seconds
 float temp;		//variable to store the valu of temperature
 int tempPin = A0;	//taking analog input via A0 pin
 int hour_second=0; //temporary variable to hold seconds when reset
- 
-
+const int buzzer = 9; //pin for buzzer
 
 void setup(){
+  pinMode(buzzer,OUTPUT);
   //setting up the reset button
   pinMode(BUTTON_RESET,INPUT_PULLUP);
   //setting up the slide switch
@@ -59,6 +59,11 @@ void loop(){
   
   //when switch is high the timer code runs
   else{
+    
+    //buzzer plays when clock code is started
+    tone(buzzer,300);
+        delay(100);
+        noTone(buzzer);
     //extra variables for reading button state and reset state
      int bs = 0;
      int rs =0;
@@ -73,9 +78,15 @@ void loop(){
     rs = digitalRead(BUTTON_RESET);
     
     
-    
       //when bs is LOW(right side) it goes to the temperature code
-      if(bs==LOW){break;}
+      if(bs==LOW){
+        //buzzer plays when timer is paused
+        tone(buzzer,300);
+        delay(100);
+        noTone(buzzer);
+        lcd.print("STAY HYDRATED");
+        delay(1000);
+        break;}
       //when reset is LOW(pressed) Timer resets to zero and session is incremented
       if(rs == LOW){hour_second=0; session_count++;}
       
@@ -94,6 +105,15 @@ void loop(){
       lcd.print(hour_second%60);
       lcd.setCursor(7,1);
       
+      //The buzzer Beeps once every hour
+      if(hour_second%3600==0){
+        tone(buzzer,300);
+        lcd.setCursor(1,1);
+        lcd.print("STAY HYDRATED");
+        delay(1000);
+        noTone(buzzer);
+      }
+      
       //printing session count
       lcd.print("S:");
       lcd.print(session_count);
@@ -102,7 +122,7 @@ void loop(){
       lcd.print(" TS:");
       lcd.print(time_studied/3600);
       
-      delay(1000);//DELAY SHOULD BE 1000 for proper measure of time as 1000ms = 1s
+      delay(1);//DELAY SHOULD BE 1000 for proper measure of time as 1000ms = 1s
       
       //incrementation and updation of loop variables
       s++;
