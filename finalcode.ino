@@ -122,7 +122,7 @@ void loop(){
       lcd.print(" TS:");
       lcd.print(time_studied/3600);
       
-      delay(1);//DELAY SHOULD BE 1000 for proper measure of time as 1000ms = 1s
+      delay(1000);//DELAY SHOULD BE 1000 for proper measure of time as 1000ms = 1s
       
       //incrementation and updation of loop variables
       s++;
